@@ -14,8 +14,8 @@ export default async function DashboardPage() {
     branch: "Computer Science and Engineering",
     academic_year: "2025-2026",
     current_semester: 2,
-    created_at: `"2025-01-01T00:00:00.000Z`",
-    updated_at: `"2025-01-01T00:00:00.000Z`"
+    created_at: "2025-01-01T00:00:00.000Z",
+    updated_at: "2025-01-01T00:00:00.000Z"
   }
 
   const semesters = [
