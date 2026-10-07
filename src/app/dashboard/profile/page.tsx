@@ -15,8 +15,8 @@ export default async function ProfilePage() {
     branch: "Computer Science and Engineering",
     academic_year: "2025-2026",
     current_semester: 2,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
+    created_at: `"2025-01-01T00:00:00.000Z`",
+    updated_at: `"2025-01-01T00:00:00.000Z`"
   }
 
   return (
