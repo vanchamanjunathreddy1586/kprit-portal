@@ -67,6 +67,7 @@ export default async function DashboardPage() {
           sem.subjects.push({
             subject_code: r.subjects.subject_code,
             subject_name: r.subjects.subject_name,
+            subject_type: r.subjects.subject_type,
             internal_marks: r.internal_marks,
             external_marks: r.external_marks,
             total_marks: r.total_marks,

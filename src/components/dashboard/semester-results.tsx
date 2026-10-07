@@ -175,8 +175,10 @@ export function SemesterResults({ student, semesters }: SemesterResultsProps) {
               <Table>
                 <TableHeader className="bg-slate-50">
                   <TableRow>
+                    <TableHead className="w-[50px] text-center">S.No</TableHead>
                     <TableHead className="w-[100px]">Code</TableHead>
                     <TableHead>Subject Name</TableHead>
+                    <TableHead className="w-[100px]">Type</TableHead>
                     <TableHead className="text-center w-[80px]">Internal</TableHead>
                     <TableHead className="text-center w-[80px]">External</TableHead>
                     <TableHead className="text-center w-[80px]">Total</TableHead>
@@ -187,10 +189,12 @@ export function SemesterResults({ student, semesters }: SemesterResultsProps) {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {currentSubjects.map((sub: any) => (
+                  {currentSubjects.map((sub: any, index: number) => (
                     <TableRow key={sub.subject_code}>
+                      <TableCell className="text-center font-medium text-muted-foreground">{index + 1}</TableCell>
                       <TableCell className="font-medium">{sub.subject_code}</TableCell>
                       <TableCell>{sub.subject_name}</TableCell>
+                      <TableCell className="text-muted-foreground text-xs">{sub.subject_type || (sub.subject_name.toLowerCase().includes('lab') ? 'Laboratory' : 'Theory')}</TableCell>
                       <TableCell className="text-center">{sub.internal_marks}</TableCell>
                       <TableCell className="text-center">{sub.external_marks}</TableCell>
                       <TableCell className="text-center font-semibold">{sub.total_marks}</TableCell>
