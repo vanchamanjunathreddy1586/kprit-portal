@@ -30,6 +30,8 @@ const getGradePoint = (grade: string) => {
 
 export function SemesterResults({ student, semesters }: SemesterResultsProps) {
   const [activeSem, setActiveSem] = useState<number>(1)
+  const [isGenerating, setIsGenerating] = useState<boolean>(false)
+  const [downloadSuccess, setDownloadSuccess] = useState<boolean>(false)
   
   // Find active semester data from the passed in array
   const activeSemesterData = semesters.find(s => s.semester_number === activeSem)
@@ -38,6 +40,10 @@ export function SemesterResults({ student, semesters }: SemesterResultsProps) {
   const currentCredits = activeSemesterData?.total_credits || 0
   const currentEarned = activeSemesterData?.credits_earned || 0
   const currentResultStatus = activeSemesterData?.result_status || 'N/A'
+  
+  // Calculate failed subjects and backlogs
+  const failedSubjects = currentSubjects.filter((s: any) => s.result_status !== 'PASS').length
+  const backlogs = failedSubjects
   
   // Available semesters tabs
   const availableSemesters = [1, 2]
@@ -51,59 +57,147 @@ export function SemesterResults({ student, semesters }: SemesterResultsProps) {
     }
   }
 
-  const exportPDF = () => {
-    const doc = new jsPDF()
+  const exportPDF = async () => {
+    setIsGenerating(true)
+    setDownloadSuccess(false)
     
-    // Header
-    doc.setFontSize(16)
-    doc.setFont("helvetica", "bold")
-    doc.text('KPRIT EXAM PORTAL', 105, 15, { align: 'center' })
-    doc.setFontSize(10)
-    doc.setFont("helvetica", "normal")
-    doc.text('Kommuri Prathap Reddy Institute of Technology', 105, 22, { align: 'center' })
-    
-    // Student Info
-    doc.setFontSize(11)
-    doc.text(`Student Name: ${student.full_name}`, 14, 35)
-    doc.text(`Roll Number: ${student.roll_number}`, 14, 42)
-    doc.text(`Branch: ${student.branch}`, 14, 49)
-    doc.text(`Semester: ${activeSem}`, 120, 35)
-    doc.text(`SGPA: ${currentSgpa.toFixed(2)}`, 120, 42)
-    doc.text(`Result: ${currentResultStatus}`, 120, 49)
+    try {
+      // Small delay to allow UI to update to loading state
+      await new Promise(resolve => setTimeout(resolve, 500))
+      
+      const doc = new jsPDF()
+      
+      // Header
+      doc.setFontSize(18)
+      doc.setFont("helvetica", "bold")
+      doc.text('KPRIT Results Portal', 105, 15, { align: 'center' })
+      
+      doc.setFontSize(12)
+      doc.setFont("helvetica", "normal")
+      doc.text(student.college || 'Kommuri Prathap Reddy Institute of Technology', 105, 23, { align: 'center' })
+      
+      // Separator Line
+      doc.setLineWidth(0.5)
+      doc.line(14, 28, 196, 28)
+      
+      // Student Info - Left Column
+      doc.setFontSize(10)
+      doc.setFont("helvetica", "bold")
+      doc.text(`Student Name:`, 14, 38)
+      doc.setFont("helvetica", "normal")
+      doc.text(student.full_name, 45, 38)
+      
+      doc.setFont("helvetica", "bold")
+      doc.text(`Student ID:`, 14, 45)
+      doc.setFont("helvetica", "normal")
+      doc.text(student.student_id || student.roll_number, 45, 45)
+      
+      doc.setFont("helvetica", "bold")
+      doc.text(`Roll Number:`, 14, 52)
+      doc.setFont("helvetica", "normal")
+      doc.text(student.roll_number, 45, 52)
+      
+      doc.setFont("helvetica", "bold")
+      doc.text(`Branch:`, 14, 59)
+      doc.setFont("helvetica", "normal")
+      doc.text(student.branch || 'CSE', 45, 59)
+      
+      // Student Info - Right Column
+      doc.setFont("helvetica", "bold")
+      doc.text(`Academic Year:`, 120, 38)
+      doc.setFont("helvetica", "normal")
+      doc.text(student.academic_year || '2025-2026', 155, 38)
+      
+      doc.setFont("helvetica", "bold")
+      doc.text(`Semester:`, 120, 45)
+      doc.setFont("helvetica", "normal")
+      doc.text(String(activeSem), 155, 45)
+      
+      // Table Data
+      const tableColumn = ["S.No", "Code", "Subject Name", "Type", "Credits", "Int.", "Ext.", "Total", "Grade", "Pts", "Result"]
+      const tableRows: any[] = []
 
-    // Table Data
-    const tableColumn = ["S.No", "Subject Code", "Subject Name", "Type", "Credits", "Internal Marks", "External Marks", "Total Marks", "Grade", "Grade Point", "Result"]
-    const tableRows: any[] = []
+      currentSubjects.forEach((sub: any, index: number) => {
+        const subjectType = sub.subject_type || (sub.subject_name.toLowerCase().includes('lab') ? 'Laboratory' : 'Theory')
+        const subjectData = [
+          index + 1,
+          sub.subject_code,
+          sub.subject_name,
+          subjectType,
+          sub.credits,
+          sub.internal_marks,
+          sub.external_marks,
+          sub.total_marks,
+          sub.grade,
+          sub.grade_point || getGradePoint(sub.grade),
+          sub.result_status
+        ]
+        tableRows.push(subjectData)
+      })
 
-    currentSubjects.forEach((sub: any, index: number) => {
-      const subjectType = sub.subject_type || (sub.subject_name.toLowerCase().includes('lab') ? 'Laboratory' : 'Theory')
-      const subjectData = [
-        index + 1,
-        sub.subject_code,
-        sub.subject_name,
-        subjectType,
-        sub.credits,
-        sub.internal_marks,
-        sub.external_marks,
-        sub.total_marks,
-        sub.grade,
-        getGradePoint(sub.grade),
-        sub.result_status
-      ]
-      tableRows.push(subjectData)
-    })
+      // @ts-ignore
+      doc.autoTable({
+        head: [tableColumn],
+        body: tableRows,
+        startY: 65,
+        theme: 'grid',
+        styles: { fontSize: 8, cellPadding: 2 },
+        headStyles: { fillColor: [41, 128, 185], textColor: 255, halign: 'center' },
+        columnStyles: {
+          0: { halign: 'center' },
+          4: { halign: 'center' },
+          5: { halign: 'center' },
+          6: { halign: 'center' },
+          7: { halign: 'center' },
+          8: { halign: 'center' },
+          9: { halign: 'center' },
+          10: { halign: 'center', fontStyle: 'bold' }
+        },
+      })
+      
+      // @ts-ignore - Get Y position after table
+      const finalY = doc.lastAutoTable.finalY || 65
+      
+      // Summary Box
+      doc.setDrawColor(200)
+      doc.setFillColor(248, 250, 252)
+      doc.rect(14, finalY + 10, 182, 35, 'FD')
+      
+      doc.setFontSize(10)
+      doc.setFont("helvetica", "bold")
+      
+      doc.text(`SGPA:`, 20, finalY + 18)
+      doc.text(`Overall Result:`, 20, finalY + 25)
+      doc.text(`CGPA:`, 20, finalY + 32)
+      doc.setFont("helvetica", "normal")
+      doc.text(currentSgpa.toFixed(2), 50, finalY + 18)
+      doc.text(currentResultStatus, 50, finalY + 25)
+      doc.text(`Not Available`, 50, finalY + 32) // Add CGPA logic here if available in db
+      
+      doc.setFont("helvetica", "bold")
+      doc.text(`Total Credits:`, 110, finalY + 18)
+      doc.text(`Earned Credits:`, 110, finalY + 25)
+      doc.text(`Failed/Backlogs:`, 110, finalY + 32)
+      doc.setFont("helvetica", "normal")
+      doc.text(String(currentCredits), 145, finalY + 18)
+      doc.text(String(currentEarned), 145, finalY + 25)
+      doc.text(String(failedSubjects), 145, finalY + 32)
+      
+      // Footer
+      doc.setFontSize(8)
+      doc.setTextColor(128)
+      doc.text(`Generated by KPRIT Results Portal on ${new Date().toLocaleDateString()}`, 105, 290, { align: 'center' })
 
-    // @ts-ignore - jspdf-autotable injects autoTable into jsPDF
-    doc.autoTable({
-      head: [tableColumn],
-      body: tableRows,
-      startY: 60,
-      theme: 'grid',
-      styles: { fontSize: 8 },
-      headStyles: { fillColor: [41, 128, 185], textColor: 255 }
-    })
-
-    doc.save(`${student.roll_number}_Sem${activeSem}_Results.pdf`)
+      doc.save(`KPRIT_Result_${student.roll_number}_Sem${activeSem}.pdf`)
+      
+      setDownloadSuccess(true)
+      setTimeout(() => setDownloadSuccess(false), 3000)
+    } catch (error) {
+      console.error("Failed to generate PDF:", error)
+      alert("Failed to generate PDF. Please try again.")
+    } finally {
+      setIsGenerating(false)
+    }
   }
 
   return (
@@ -136,9 +230,23 @@ export function SemesterResults({ student, semesters }: SemesterResultsProps) {
                   <Printer className="mr-2 h-4 w-4" />
                   Print
                 </Button>
-                <Button size="sm" onClick={exportPDF}>
-                  <Download className="mr-2 h-4 w-4" />
-                  Download PDF
+                <Button size="sm" onClick={exportPDF} disabled={isGenerating || downloadSuccess} className={downloadSuccess ? 'bg-green-600 hover:bg-green-700' : ''}>
+                  {isGenerating ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent mr-2" />
+                      Generating PDF...
+                    </>
+                  ) : downloadSuccess ? (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Downloaded Successfully
+                    </>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Download PDF
+                    </>
+                  )}
                 </Button>
               </div>
             )}
