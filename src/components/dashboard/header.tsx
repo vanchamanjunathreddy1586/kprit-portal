@@ -60,13 +60,19 @@ export function DashboardHeader({ user, student }: DashboardHeaderProps) {
                 <AvatarFallback className="bg-primary/10 text-primary">{initials}</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end">
+            <DropdownMenuContent className="w-64" align="end">
               <DropdownMenuLabel className="font-normal">
-                <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">{student?.student_name || 'Student'}</p>
-                  <p className="text-xs leading-none text-muted-foreground">
-                    {student?.hall_ticket_number || '25RA1A05BV'}
-                  </p>
+                <div className="flex flex-col space-y-2">
+                  <div>
+                    <p className="text-sm font-medium leading-none">{student?.student_name || 'Student'}</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {student?.hall_ticket_number || '25RA1A05BV'}
+                    </p>
+                  </div>
+                  <div className="text-xs text-muted-foreground border-t pt-2">
+                    <p>{student?.course} - {student?.branch}</p>
+                    <p>Semester {student?.current_semester}</p>
+                  </div>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
