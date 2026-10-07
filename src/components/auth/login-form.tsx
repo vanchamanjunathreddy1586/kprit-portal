@@ -37,7 +37,7 @@ export function LoginForm() {
     if (validIds.includes(id) && pass === 'Kanni@1586') {
       // Set a simple client side cookie
       document.cookie = "kprit_auth=25ra1a05bv; path=/; max-age=86400"
-      router.push('/dashboard')
+      router.replace('/dashboard')
       router.refresh()
     } else {
       setError("Invalid login credentials")
