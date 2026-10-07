@@ -56,7 +56,7 @@ export function DashboardHeader({ user, student }: DashboardHeaderProps) {
           </Button>
 
           <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                 <Avatar className="h-10 w-10 border border-primary/20">
                   <AvatarFallback className="bg-primary/10 text-primary">{initials}</AvatarFallback>
