@@ -50,6 +50,11 @@ export function DashboardHeader({ user, student }: DashboardHeaderProps) {
             <span className="text-xs text-muted-foreground">{student?.hall_ticket_number || '25RA1A05BV'}</span>
           </div>
           
+          <Button variant="outline" size="sm" onClick={handleLogout} className="hidden md:flex text-destructive border-destructive/20 hover:bg-destructive/10">
+            <LogOut className="mr-2 h-4 w-4" />
+            Logout
+          </Button>
+
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Button variant="ghost" className="relative h-10 w-10 rounded-full">
