@@ -25,9 +25,14 @@ export function LoginForm() {
     await new Promise(r => setTimeout(r, 600))
 
     const id = email.toLowerCase().trim()
+    const validIds = [
+      '25ra1a05bv', 
+      '25ra105bv', 
+      '25ra1a05bv@kpritech.ac.in',
+      '25ra105bv@kpritech.ac.in'
+    ]
 
-    // Accept both 25ra105bv and 25ra1a05bv in case of typos
-    if ((id === '25ra1a05bv' || id === '25ra105bv') && password === 'Kanni@1586') {
+    if (validIds.includes(id) && password === 'Kanni@1586') {
       // Set a simple client side cookie
       document.cookie = "kprit_auth=25ra1a05bv; path=/; max-age=86400"
       router.push('/dashboard')
