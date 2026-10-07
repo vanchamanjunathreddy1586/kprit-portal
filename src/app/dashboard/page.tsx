@@ -90,7 +90,7 @@ export default async function DashboardPage() {
   }
 
   // Use fallback demo data if DB is empty to satisfy demo requirements without seeding
-  const student = dbStudent || {
+  const student = studentData || {
     id: "default-id",
     auth_user_id: user?.id,
     student_id: "25RA1A05BV",
