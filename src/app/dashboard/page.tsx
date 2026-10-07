@@ -27,8 +27,8 @@ export default async function DashboardPage() {
       credits_earned: 20,
       sgpa: 7.00,
       result_status: "PASS",
-      created_at: `"2025-01-01T00:00:00.000Z`",
-      updated_at: `"2025-01-01T00:00:00.000Z`",
+      created_at: "2025-01-01T00:00:00.000Z",
+      updated_at: "2025-01-01T00:00:00.000Z",
       subjects: [
         { subject_code: "MAT101", subject_name: "Matrices and Calculus", internal_marks: 24, external_marks: 46, total_marks: 70, grade: "B+", credits: 4, result_status: "PASS" },
         { subject_code: "CHE102", subject_name: "Engineering Chemistry", internal_marks: 22, external_marks: 40, total_marks: 62, grade: "B", credits: 4, result_status: "PASS" },
@@ -46,8 +46,8 @@ export default async function DashboardPage() {
       credits_earned: 19,
       sgpa: 7.20,
       result_status: "PASS",
-      created_at: `"2025-01-01T00:00:00.000Z`",
-      updated_at: `"2025-01-01T00:00:00.000Z`",
+      created_at: "2025-01-01T00:00:00.000Z",
+      updated_at: "2025-01-01T00:00:00.000Z",
       subjects: [
         { subject_code: "ODE201", subject_name: "ODEAVC", internal_marks: 25, external_marks: 48, total_marks: 73, grade: "B+", credits: 4, result_status: "PASS" },
         { subject_code: "PHY202", subject_name: "Advanced Physics", internal_marks: 23, external_marks: 41, total_marks: 64, grade: "B", credits: 4, result_status: "PASS" },
