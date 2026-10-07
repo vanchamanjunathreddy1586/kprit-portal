@@ -9,7 +9,7 @@ export default async function ProfilePage() {
   const student = {
     id: "25ra1a05bv",
     user_id: "demo-user",
-    student_name: "Demo Student",
+    student_name: "Vancha Manjunath Reddy",
     hall_ticket_number: "25RA1A05BV",
     course: "B.Tech",
     branch: "Computer Science and Engineering",
