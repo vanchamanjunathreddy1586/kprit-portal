@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -16,28 +15,24 @@ export function LoginForm() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
-  const supabase = createClient()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
 
-    // Note: In a real system, you might map Hall Ticket Number to an email address in the backend,
-    // but for Supabase Auth we'll assume the user enters their registered email or we create dummy emails.
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+    // Simulate network delay
+    await new Promise(r => setTimeout(r, 800))
 
-    if (error) {
-      setError(error.message)
+    if (email.toLowerCase().trim() === '25ra1a05bv' && password === 'Kanni@1586') {
+      // Set a simple client side cookie
+      document.cookie = "kprit_auth=25ra1a05bv; path=/; max-age=86400"
+      router.push('/dashboard')
+      router.refresh()
+    } else {
+      setError("Invalid login credentials")
       setLoading(false)
-      return
     }
-
-    router.push('/dashboard')
-    router.refresh()
   }
 
   return (
@@ -56,11 +51,11 @@ export function LoginForm() {
       <CardContent>
         <form onSubmit={handleLogin} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">Student ID / Email</Label>
+            <Label htmlFor="email">Student ID / Hall Ticket Number</Label>
             <Input 
               id="email" 
-              type="email" 
-              placeholder="student@kprit.ac.in" 
+              type="text" 
+              placeholder="e.g. 25ra1a05bv" 
               required 
               value={email}
               onChange={(e) => setEmail(e.target.value)}

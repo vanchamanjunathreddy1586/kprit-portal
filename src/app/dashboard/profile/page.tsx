@@ -1,70 +1,72 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+
+export const instant = false // Next 15
 
 export default async function ProfilePage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) {
-    redirect('/login')
-  }
-
-  const { data: student } = await supabase
-    .from('students')
-    .select('*')
-    .eq('profile_id', user.id)
-    .single()
-
-  if (!student) {
-    return (
-      <div className="flex items-center justify-center h-full min-h-[50vh]">
-        <div className="text-center space-y-4">
-          <h2 className="text-2xl font-bold">No Student Record Found</h2>
-          <p className="text-muted-foreground">Please contact administration.</p>
-        </div>
-      </div>
-    )
+  const student = {
+    id: "25ra1a05bv",
+    user_id: "demo-user",
+    student_name: "Demo Student",
+    hall_ticket_number: "25RA1A05BV",
+    course: "B.Tech",
+    branch: "Computer Science and Engineering",
+    academic_year: "2025-2026",
+    current_semester: 2,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Student Profile</h1>
-        <p className="text-muted-foreground">Manage your account information and preferences.</p>
+    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+      <div className="flex items-center justify-between space-y-2">
+        <h2 className="text-3xl font-bold tracking-tight">Student Profile</h2>
       </div>
       
-      <Card>
-        <CardHeader>
-          <CardTitle>Personal Information</CardTitle>
-          <CardDescription>Your official student details as registered in the system.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-muted-foreground">Full Name</Label>
-              <p className="font-medium">{student.full_name}</p>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <Card className="col-span-2">
+          <CardHeader>
+            <CardTitle>Personal Information</CardTitle>
+            <CardDescription>
+              Your registered academic details. Please contact administration if any information is incorrect.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Full Name</Label>
+                <Input id="name" defaultValue={student.student_name} readOnly className="bg-slate-50" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="hallTicket">Hall Ticket Number</Label>
+                <Input id="hallTicket" defaultValue={student.hall_ticket_number} readOnly className="bg-slate-50" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="course">Course</Label>
+                <Input id="course" defaultValue={student.course} readOnly className="bg-slate-50" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="branch">Branch</Label>
+                <Input id="branch" defaultValue={student.branch} readOnly className="bg-slate-50" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="academicYear">Academic Year</Label>
+                <Input id="academicYear" defaultValue={student.academic_year} readOnly className="bg-slate-50" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="semester">Current Semester</Label>
+                <Input id="semester" defaultValue={`Semester ${student.current_semester}`} readOnly className="bg-slate-50" />
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label className="text-muted-foreground">Hall Ticket Number</Label>
-              <p className="font-medium">{student.hall_ticket_number}</p>
+            
+            <div className="pt-4 flex justify-end">
+              <Button disabled>Request Details Update</Button>
             </div>
-            <div className="space-y-2">
-              <Label className="text-muted-foreground">Email Address</Label>
-              <p className="font-medium">{student.email || user.email}</p>
-            </div>
-            <div className="space-y-2">
-              <Label className="text-muted-foreground">Course & Branch</Label>
-              <p className="font-medium">{student.course} - {student.branch}</p>
-            </div>
-            <div className="space-y-2">
-              <Label className="text-muted-foreground">Academic Year</Label>
-              <p className="font-medium">{student.academic_year}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }
