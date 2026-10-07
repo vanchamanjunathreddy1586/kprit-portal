@@ -7,9 +7,11 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { GraduationCap, Loader2 } from 'lucide-react'
+import Link from 'next/link'
 
 export function LoginForm() {
   const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
@@ -20,15 +22,15 @@ export function LoginForm() {
     setError(null)
 
     // Simulate network delay
-    await new Promise(r => setTimeout(r, 600))
+    await new Promise(r => setTimeout(r, 800))
 
-    if (email.toLowerCase().trim() === '25ra1a05bv') {
+    if (email.toLowerCase().trim() === '25ra1a05bv' && password === 'Kanni@1586') {
       // Set a simple client side cookie
       document.cookie = "kprit_auth=25ra1a05bv; path=/; max-age=86400"
       router.push('/dashboard')
       router.refresh()
     } else {
-      setError("Invalid Hall Ticket Number. Results not found.")
+      setError("Invalid login credentials")
       setLoading(false)
     }
   }
@@ -49,7 +51,7 @@ export function LoginForm() {
       <CardContent>
         <form onSubmit={handleLogin} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">Hall Ticket Number</Label>
+            <Label htmlFor="email">Student ID / Hall Ticket Number</Label>
             <Input 
               id="email" 
               type="text" 
@@ -57,6 +59,21 @@ export function LoginForm() {
               required 
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="password">Password</Label>
+              <Link href="/forgot-password" className="text-sm text-primary hover:underline">
+                Forgot Password?
+              </Link>
+            </div>
+            <Input 
+              id="password" 
+              type="password" 
+              required 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           
@@ -68,12 +85,12 @@ export function LoginForm() {
 
           <Button type="submit" className="w-full" disabled={loading}>
             {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-            {loading ? 'Searching Results...' : 'View Results'}
+            {loading ? 'Logging in...' : 'Login'}
           </Button>
         </form>
       </CardContent>
       <CardFooter className="flex flex-col space-y-4 text-center text-sm text-muted-foreground">
-        <p>Authorized access only. By accessing results, you agree to the institution's terms of service.</p>
+        <p>Authorized access only. By logging in, you agree to the institution's terms of service.</p>
       </CardFooter>
     </Card>
   )
