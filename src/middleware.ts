@@ -1,8 +1,38 @@
+import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
-  const authCookie = request.cookies.get('kprit_auth')?.value
-  const isAuthenticated = authCookie === '25ra1a05bv'
+  let supabaseResponse = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  })
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
+          supabaseResponse = NextResponse.next({
+            request,
+          })
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options)
+          )
+        },
+      },
+    }
+  )
+
+  // Fetch the user session to enforce protected routes
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
   const isAuthRoute = request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/forgot-password'
   
@@ -10,15 +40,15 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
   
-  if (!isAuthenticated && !isAuthRoute && !request.nextUrl.pathname.startsWith('/api') && request.nextUrl.pathname !== '/') {
+  if (!user && !isAuthRoute && !request.nextUrl.pathname.startsWith('/api') && request.nextUrl.pathname !== '/') {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  if (isAuthenticated && isAuthRoute) {
+  if (user && isAuthRoute) {
     return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 
-  return NextResponse.next()
+  return supabaseResponse
 }
 
 export const config = {

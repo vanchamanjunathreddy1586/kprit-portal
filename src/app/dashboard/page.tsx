@@ -1,11 +1,93 @@
 import { StudentDashboard } from '@/components/dashboard/student-dashboard'
-
-
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 
 export default async function DashboardPage() {
+  const cookieStore = await cookies()
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() { return cookieStore.getAll() },
+        setAll() {},
+      },
+    }
+  )
+
+  const { data: { user } } = await supabase.auth.getUser()
   
-  // HARDCODED DEMO DATA
-  const student = {
+  let studentData = null
+  let semestersData = null
+
+  if (user) {
+    const { data: dbStudent } = await supabase
+      .from('students')
+      .select('*')
+      .eq('auth_user_id', user.id)
+      .single()
+      
+    studentData = dbStudent
+
+    if (dbStudent) {
+      // Fetch semesters and results
+      const { data: results } = await supabase
+        .from('results')
+        .select(`
+          *,
+          subjects (*),
+          semesters (*)
+        `)
+        .eq('student_id', dbStudent.id)
+        
+      if (results && results.length > 0) {
+        // Group by semester
+        const semsMap = new Map()
+        
+        results.forEach((r: any) => {
+          if (!semsMap.has(r.semesters.id)) {
+            semsMap.set(r.semesters.id, {
+              id: r.semesters.id,
+              semester_number: r.semesters.semester_number,
+              student_id: dbStudent.id,
+              total_credits: 0,
+              credits_earned: 0,
+              total_points: 0,
+              subjects: []
+            })
+          }
+          
+          const sem = semsMap.get(r.semesters.id)
+          sem.total_credits += r.subjects.credits
+          if (r.result_status === 'PASS') {
+            sem.credits_earned += r.subjects.credits
+            sem.total_points += (r.grade_point * r.subjects.credits)
+          }
+          
+          sem.subjects.push({
+            subject_code: r.subjects.subject_code,
+            subject_name: r.subjects.subject_name,
+            internal_marks: r.internal_marks,
+            external_marks: r.external_marks,
+            total_marks: r.total_marks,
+            grade: r.grade,
+            grade_point: r.grade_point,
+            credits: r.subjects.credits,
+            result_status: r.result_status
+          })
+        })
+        
+        semestersData = Array.from(semsMap.values()).map(sem => ({
+          ...sem,
+          sgpa: sem.total_credits > 0 ? (sem.total_points / sem.total_credits).toFixed(2) : 0,
+          result_status: sem.credits_earned === sem.total_credits ? 'PASS' : 'FAIL'
+        })).sort((a, b) => a.semester_number - b.semester_number)
+      }
+    }
+  }
+
+  // HARDCODED DEMO DATA FALLBACK
+  const student = studentData || {
     id: "25ra1a05bv",
     user_id: "demo-user",
     student_name: "Vancha Manjunath Reddy",
@@ -18,7 +100,7 @@ export default async function DashboardPage() {
     updated_at: "2025-01-01T00:00:00.000Z"
   }
 
-  const semesters = [
+  const semesters = semestersData || [
     {
       id: "sem1",
       student_id: "25ra1a05bv",

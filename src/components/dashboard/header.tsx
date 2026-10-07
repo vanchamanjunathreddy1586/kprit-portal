@@ -4,6 +4,7 @@ import { GraduationCap, LogOut, User } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { createClient } from '@/lib/supabase-client'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,9 +21,14 @@ interface DashboardHeaderProps {
 
 export function DashboardHeader({ user, student }: DashboardHeaderProps) {
   const router = useRouter()
+  const supabase = createClient()
 
   const handleLogout = async () => {
+    // Standard cookie deletion fallback
     document.cookie = "kprit_auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    // Supabase auth signout
+    await supabase.auth.signOut()
+    
     router.push('/login')
     router.refresh()
   }

@@ -9,39 +9,38 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { GraduationCap, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 
+import { createClient } from '@/lib/supabase-client'
+
 export function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
+  const supabase = createClient()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
 
-    // Simulate network delay
-    await new Promise(r => setTimeout(r, 600))
-
     const id = email.toLowerCase().trim()
     const pass = password.trim()
     
-    const validIds = [
-      '25ra1a05bv', 
-      '25ra105bv', 
-      '25ra1a05bv@kpritech.ac.in',
-      '25ra105bv@kpritech.ac.in'
-    ]
+    // Convert Hall Ticket to Email format for Supabase Auth if needed
+    const authEmail = id.includes('@') ? id : `${id}@kpritech.ac.in`
 
-    if (validIds.includes(id) && pass === 'Kanni@1586') {
-      // Set a simple client side cookie
-      document.cookie = "kprit_auth=25ra1a05bv; path=/; max-age=86400"
+    const { error: authError } = await supabase.auth.signInWithPassword({
+      email: authEmail,
+      password: pass,
+    })
+
+    if (authError) {
+      setError(authError.message === 'Invalid login credentials' ? 'Invalid login credentials' : authError.message)
+      setLoading(false)
+    } else {
       router.replace('/dashboard')
       router.refresh()
-    } else {
-      setError("Invalid login credentials")
-      setLoading(false)
     }
   }
 
