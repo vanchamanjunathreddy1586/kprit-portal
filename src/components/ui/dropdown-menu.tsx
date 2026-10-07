@@ -13,13 +13,9 @@ function DropdownMenuPortal({ ...props }: MenuPrimitive.Portal.Props) {
   return <MenuPrimitive.Portal data-slot="dropdown-menu-portal" {...props} />
 }
 
-const DropdownMenuTrigger = React.forwardRef<
-  React.ElementRef<typeof MenuPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof MenuPrimitive.Trigger>
->(({ ...props }, ref) => (
-  <MenuPrimitive.Trigger ref={ref} data-slot="dropdown-menu-trigger" {...props} />
-))
-DropdownMenuTrigger.displayName = MenuPrimitive.Trigger.displayName
+function DropdownMenuTrigger({ ...props }: MenuPrimitive.Trigger.Props) {
+  return <MenuPrimitive.Trigger data-slot="dropdown-menu-trigger" {...props} />
+}
 
 function DropdownMenuContent({
   align = "start",
