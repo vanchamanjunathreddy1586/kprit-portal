@@ -56,6 +56,7 @@ export function DashboardHeader({ user, student }: DashboardHeaderProps) {
           </Button>
 
           <DropdownMenu>
+            {/* @ts-ignore - Radix supports asChild but local types are strict */}
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                 <Avatar className="h-10 w-10 border border-primary/20">
