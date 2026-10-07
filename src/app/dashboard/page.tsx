@@ -1,6 +1,6 @@
 import { StudentDashboard } from '@/components/dashboard/student-dashboard'
 
-export const instant = false // Next 15
+
 
 export default async function DashboardPage() {
   

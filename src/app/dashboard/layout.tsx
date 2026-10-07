@@ -1,6 +1,6 @@
 import { DashboardHeader } from '@/components/dashboard/header'
 
-export const instant = false // Next 15
+
 
 export default async function DashboardLayout({
   children,

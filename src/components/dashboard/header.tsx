@@ -2,6 +2,7 @@
 
 import { GraduationCap, LogOut, User } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
@@ -67,8 +68,8 @@ export function DashboardHeader({ user, student }: DashboardHeaderProps) {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem asChild className="cursor-pointer">
-                <Link href="/dashboard/profile">
+              <DropdownMenuItem className="cursor-pointer">
+                <Link href="/dashboard/profile" className="flex items-center w-full">
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                 </Link>

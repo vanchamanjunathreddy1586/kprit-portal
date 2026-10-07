@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
-export const instant = false // Next 15
+
 
 export default async function ProfilePage() {
   const student = {
