@@ -32,10 +32,7 @@ export default async function DashboardLayout({
       .eq('auth_user_id', user.id)
       .single()
       
-    studentData = dbStudent
-  }
-  
-  // Fallback to demo data if no Supabase data found (for seamless transition)
+  // Use fallback demo data if DB is empty, as requested to avoid DB seeding
   const student = studentData || {
     id: "default-id",
     auth_user_id: user?.id,

@@ -33,7 +33,7 @@ export function DashboardHeader({ user, student }: DashboardHeaderProps) {
     router.refresh()
   }
 
-  const initials = student?.full_name ? student.full_name.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase() : 'ST'
+  const initials = student?.full_name ? student.full_name.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase() : 'VM'
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -55,44 +55,17 @@ export function DashboardHeader({ user, student }: DashboardHeaderProps) {
             <span className="text-xs text-muted-foreground">{student?.roll_number || '25RA1A05BV'}</span>
           </div>
           
-          <Button variant="outline" size="sm" onClick={handleLogout} className="hidden md:flex text-destructive border-destructive/20 hover:bg-destructive/10">
-            <LogOut className="mr-2 h-4 w-4" />
-            Logout
+          <Button variant="outline" size="sm" onClick={handleLogout} className="flex text-destructive border-destructive/20 hover:bg-destructive/10">
+            <LogOut className="mr-2 h-4 w-4 hidden sm:block" />
+            <span className="hidden sm:inline">Logout</span>
+            <LogOut className="h-4 w-4 sm:hidden" />
           </Button>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger className="relative h-10 w-10 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-              <Avatar className="h-10 w-10 border border-primary/20">
-                <AvatarFallback className="bg-primary/10 text-primary">{initials}</AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-64" align="end">
-              <DropdownMenuLabel className="font-normal">
-                <div className="flex flex-col space-y-2">
-                  <div>
-                    <p className="text-sm font-medium leading-none">{student?.full_name || 'Student'}</p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {student?.roll_number || '25RA1A05BV'}
-                    </p>
-                  </div>
-                  <div className="text-xs text-muted-foreground border-t pt-2">
-                    <p>{student?.college ? 'B.Tech' : 'B.Tech'} - {student?.branch || 'CSE'}</p>
-                    <p>Semester {student?.current_semester || 2}</p>
-                  </div>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => router.push('/dashboard/profile')} className="cursor-pointer">
-                <User className="mr-2 h-4 w-4" />
-                <span>Profile</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout} className="text-destructive cursor-pointer">
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Log out</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="relative h-10 w-10 rounded-full cursor-default select-none">
+            <Avatar className="h-10 w-10 border border-primary/20">
+              <AvatarFallback className="bg-primary/10 text-primary font-medium">{initials}</AvatarFallback>
+            </Avatar>
+          </div>
         </div>
       </div>
     </header>

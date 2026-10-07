@@ -36,21 +36,27 @@ export default async function ProfilePage() {
     studentData = dbStudent
   }
 
-  // Fallback ONLY if database fetch fails but we want to show the UI
-  // Note: We use the exact schema column names
-  const student = studentData || {
-    id: "default-id",
-    auth_user_id: user?.id,
-    student_id: "25RA1A05BV",
-    full_name: "Vancha Manjunath Reddy",
-    email: "25ra1a05bv@kpritech.ac.in",
-    roll_number: "25RA1A05BV",
-    college: "Kommuri Prathap Reddy Institute of Technology",
-    branch: "Computer Science and Engineering",
-    academic_year: "2025-2026",
-    current_year: 1,
-    current_semester: 2,
+  if (!studentData) {
+    return (
+      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+        <div className="flex items-center space-x-4 mb-6">
+          <Link href="/dashboard">
+            <Button variant="outline" size="sm" className="h-9 gap-1">
+              <ArrowLeft className="h-4 w-4" />
+              <span className="hidden sm:inline">Back to Results</span>
+            </Button>
+          </Link>
+          <h2 className="text-2xl font-bold tracking-tight">Student Details</h2>
+        </div>
+        <div className="flex flex-col items-center justify-center h-64 text-center">
+          <p className="text-muted-foreground text-lg mb-2">Profile not found.</p>
+          <p className="text-muted-foreground text-sm">Please contact the administration to link your account to a student record.</p>
+        </div>
+      </div>
+    )
   }
+
+  const student = studentData
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
@@ -61,7 +67,7 @@ export default async function ProfilePage() {
             <span className="hidden sm:inline">Back to Results</span>
           </Button>
         </Link>
-        <h2 className="text-2xl font-bold tracking-tight">Student Details</h2>
+        <h2 className="text-2xl font-bold tracking-tight">My Details</h2>
       </div>
       
       <div className="grid gap-4 max-w-4xl mx-auto">
@@ -100,11 +106,11 @@ export default async function ProfilePage() {
               </div>
               <div className="space-y-1">
                 <Label className="text-muted-foreground text-xs uppercase tracking-wider font-semibold">Year</Label>
-                <p className="font-medium text-base">Year {student.current_year}</p>
+                <p className="font-medium text-base">{student.current_year}</p>
               </div>
               <div className="space-y-1">
                 <Label className="text-muted-foreground text-xs uppercase tracking-wider font-semibold">Semester</Label>
-                <p className="font-medium text-base">Semester {student.current_semester}</p>
+                <p className="font-medium text-base">{student.current_semester}</p>
               </div>
               <div className="space-y-1 md:col-span-2">
                 <Label className="text-muted-foreground text-xs uppercase tracking-wider font-semibold">Email</Label>
