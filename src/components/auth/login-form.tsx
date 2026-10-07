@@ -25,6 +25,8 @@ export function LoginForm() {
     await new Promise(r => setTimeout(r, 600))
 
     const id = email.toLowerCase().trim()
+    const pass = password.trim()
+    
     const validIds = [
       '25ra1a05bv', 
       '25ra105bv', 
@@ -32,7 +34,7 @@ export function LoginForm() {
       '25ra105bv@kpritech.ac.in'
     ]
 
-    if (validIds.includes(id) && password === 'Kanni@1586') {
+    if (validIds.includes(id) && pass === 'Kanni@1586') {
       // Set a simple client side cookie
       document.cookie = "kprit_auth=25ra1a05bv; path=/; max-age=86400"
       router.push('/dashboard')
