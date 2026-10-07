@@ -64,8 +64,8 @@ export function SemesterResults({ student, semesters }: SemesterResultsProps) {
     
     // Student Info
     doc.setFontSize(11)
-    doc.text(`Student Name: ${student.student_name}`, 14, 35)
-    doc.text(`Hall Ticket No: ${student.hall_ticket_number}`, 14, 42)
+    doc.text(`Student Name: ${student.full_name}`, 14, 35)
+    doc.text(`Roll Number: ${student.roll_number}`, 14, 42)
     doc.text(`Branch: ${student.branch}`, 14, 49)
     doc.text(`Semester: ${activeSem}`, 120, 35)
     doc.text(`SGPA: ${currentSgpa.toFixed(2)}`, 120, 42)
@@ -100,7 +100,7 @@ export function SemesterResults({ student, semesters }: SemesterResultsProps) {
       headStyles: { fillColor: [41, 128, 185], textColor: 255 }
     })
 
-    doc.save(`${student.hall_ticket_number}_Sem${activeSem}_Results.pdf`)
+    doc.save(`${student.roll_number}_Sem${activeSem}_Results.pdf`)
   }
 
   return (

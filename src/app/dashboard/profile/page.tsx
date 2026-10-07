@@ -36,68 +36,80 @@ export default async function ProfilePage() {
     studentData = dbStudent
   }
 
+  // Fallback ONLY if database fetch fails but we want to show the UI
+  // Note: We use the exact schema column names
   const student = studentData || {
-    id: "25ra1a05bv",
-    user_id: user?.id || "demo-user",
-    student_name: "Vancha Manjunath Reddy",
-    hall_ticket_number: "25RA1A05BV",
-    course: "B.Tech",
+    id: "default-id",
+    auth_user_id: user?.id,
+    student_id: "25RA1A05BV",
+    full_name: "Vancha Manjunath Reddy",
+    email: "25ra1a05bv@kpritech.ac.in",
+    roll_number: "25RA1A05BV",
+    college: "Kommuri Prathap Reddy Institute of Technology",
     branch: "Computer Science and Engineering",
     academic_year: "2025-2026",
+    current_year: 1,
     current_semester: 2,
-    created_at: "2025-01-01T00:00:00.000Z",
-    updated_at: "2025-01-01T00:00:00.000Z"
   }
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-      <div className="flex items-center space-x-4 mb-4">
+      <div className="flex items-center space-x-4 mb-6">
         <Link href="/dashboard">
-          <Button variant="outline" size="icon">
+          <Button variant="outline" size="sm" className="h-9 gap-1">
             <ArrowLeft className="h-4 w-4" />
+            <span className="hidden sm:inline">Back to Results</span>
           </Button>
         </Link>
-        <h2 className="text-3xl font-bold tracking-tight">Student Profile</h2>
+        <h2 className="text-2xl font-bold tracking-tight">Student Details</h2>
       </div>
       
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card className="col-span-2">
-          <CardHeader>
-            <CardTitle>Personal Information</CardTitle>
+      <div className="grid gap-4 max-w-4xl mx-auto">
+        <Card className="shadow-md border-t-4 border-t-[#31516a]">
+          <CardHeader className="bg-slate-50/50 border-b">
+            <CardTitle className="text-xl text-[#31516a]">Student Information</CardTitle>
             <CardDescription>
-              Your registered academic details. Please contact administration if any information is incorrect.
+              Registered academic profile details.
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input id="name" defaultValue={student.student_name} readOnly className="bg-slate-50" />
+          <CardContent className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-1">
+                <Label className="text-muted-foreground text-xs uppercase tracking-wider font-semibold">Full Name</Label>
+                <p className="font-medium text-base">{student.full_name}</p>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="hallTicket">Hall Ticket Number</Label>
-                <Input id="hallTicket" defaultValue={student.hall_ticket_number} readOnly className="bg-slate-50" />
+              <div className="space-y-1">
+                <Label className="text-muted-foreground text-xs uppercase tracking-wider font-semibold">Student ID</Label>
+                <p className="font-medium text-base">{student.student_id}</p>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="course">Course</Label>
-                <Input id="course" defaultValue={student.course} readOnly className="bg-slate-50" />
+              <div className="space-y-1">
+                <Label className="text-muted-foreground text-xs uppercase tracking-wider font-semibold">Roll Number</Label>
+                <p className="font-medium text-base">{student.roll_number}</p>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="branch">Branch</Label>
-                <Input id="branch" defaultValue={student.branch} readOnly className="bg-slate-50" />
+              <div className="space-y-1">
+                <Label className="text-muted-foreground text-xs uppercase tracking-wider font-semibold">College</Label>
+                <p className="font-medium text-base">{student.college}</p>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="academicYear">Academic Year</Label>
-                <Input id="academicYear" defaultValue={student.academic_year} readOnly className="bg-slate-50" />
+              <div className="space-y-1">
+                <Label className="text-muted-foreground text-xs uppercase tracking-wider font-semibold">Branch</Label>
+                <p className="font-medium text-base">{student.branch}</p>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="semester">Current Semester</Label>
-                <Input id="semester" defaultValue={`Semester ${student.current_semester}`} readOnly className="bg-slate-50" />
+              <div className="space-y-1">
+                <Label className="text-muted-foreground text-xs uppercase tracking-wider font-semibold">Academic Year</Label>
+                <p className="font-medium text-base">{student.academic_year}</p>
               </div>
-            </div>
-            
-            <div className="pt-4 flex justify-end">
-              <Button disabled>Request Details Update</Button>
+              <div className="space-y-1">
+                <Label className="text-muted-foreground text-xs uppercase tracking-wider font-semibold">Year</Label>
+                <p className="font-medium text-base">Year {student.current_year}</p>
+              </div>
+              <div className="space-y-1">
+                <Label className="text-muted-foreground text-xs uppercase tracking-wider font-semibold">Semester</Label>
+                <p className="font-medium text-base">Semester {student.current_semester}</p>
+              </div>
+              <div className="space-y-1 md:col-span-2">
+                <Label className="text-muted-foreground text-xs uppercase tracking-wider font-semibold">Email</Label>
+                <p className="font-medium text-base">{student.email}</p>
+              </div>
             </div>
           </CardContent>
         </Card>

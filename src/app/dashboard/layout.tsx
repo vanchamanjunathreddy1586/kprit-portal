@@ -37,16 +37,17 @@ export default async function DashboardLayout({
   
   // Fallback to demo data if no Supabase data found (for seamless transition)
   const student = studentData || {
-    id: "25ra1a05bv",
-    user_id: user?.id || "demo-user",
-    student_name: "Vancha Manjunath Reddy",
-    hall_ticket_number: "25RA1A05BV",
-    course: "B.Tech",
+    id: "default-id",
+    auth_user_id: user?.id,
+    student_id: "25RA1A05BV",
+    full_name: "Vancha Manjunath Reddy",
+    email: "25ra1a05bv@kpritech.ac.in",
+    roll_number: "25RA1A05BV",
+    college: "Kommuri Prathap Reddy Institute of Technology",
     branch: "Computer Science and Engineering",
     academic_year: "2025-2026",
+    current_year: 1,
     current_semester: 2,
-    created_at: "2025-01-01T00:00:00.000Z",
-    updated_at: "2025-01-01T00:00:00.000Z"
   }
 
   return (

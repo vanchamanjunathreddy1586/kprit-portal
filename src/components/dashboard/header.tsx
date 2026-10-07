@@ -33,7 +33,7 @@ export function DashboardHeader({ user, student }: DashboardHeaderProps) {
     router.refresh()
   }
 
-  const initials = student?.student_name ? student.student_name.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase() : 'ST'
+  const initials = student?.full_name ? student.full_name.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase() : 'ST'
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -51,8 +51,8 @@ export function DashboardHeader({ user, student }: DashboardHeaderProps) {
 
         <div className="flex items-center gap-4">
           <div className="hidden sm:flex flex-col items-end mr-2">
-            <span className="text-sm font-medium">{student?.student_name || 'Student'}</span>
-            <span className="text-xs text-muted-foreground">{student?.hall_ticket_number || '25RA1A05BV'}</span>
+            <span className="text-sm font-medium">{student?.full_name || 'Student'}</span>
+            <span className="text-xs text-muted-foreground">{student?.roll_number || '25RA1A05BV'}</span>
           </div>
           
           <Button variant="outline" size="sm" onClick={handleLogout} className="hidden md:flex text-destructive border-destructive/20 hover:bg-destructive/10">
@@ -70,14 +70,14 @@ export function DashboardHeader({ user, student }: DashboardHeaderProps) {
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-2">
                   <div>
-                    <p className="text-sm font-medium leading-none">{student?.student_name || 'Student'}</p>
+                    <p className="text-sm font-medium leading-none">{student?.full_name || 'Student'}</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      {student?.hall_ticket_number || '25RA1A05BV'}
+                      {student?.roll_number || '25RA1A05BV'}
                     </p>
                   </div>
                   <div className="text-xs text-muted-foreground border-t pt-2">
-                    <p>{student?.course} - {student?.branch}</p>
-                    <p>Semester {student?.current_semester}</p>
+                    <p>{student?.college ? 'B.Tech' : 'B.Tech'} - {student?.branch || 'CSE'}</p>
+                    <p>Semester {student?.current_semester || 2}</p>
                   </div>
                 </div>
               </DropdownMenuLabel>
