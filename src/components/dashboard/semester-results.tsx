@@ -72,19 +72,22 @@ export function SemesterResults({ student, semesters }: SemesterResultsProps) {
     doc.text(`Result: ${currentResultStatus}`, 120, 49)
 
     // Table Data
-    const tableColumn = ["Subject Code", "Subject Name", "Int", "Ext", "Total", "Grade", "GP", "Cr", "Result"]
+    const tableColumn = ["S.No", "Subject Code", "Subject Name", "Type", "Credits", "Internal Marks", "External Marks", "Total Marks", "Grade", "Grade Point", "Result"]
     const tableRows: any[] = []
 
-    currentSubjects.forEach((sub: any) => {
+    currentSubjects.forEach((sub: any, index: number) => {
+      const subjectType = sub.subject_type || (sub.subject_name.toLowerCase().includes('lab') ? 'Laboratory' : 'Theory')
       const subjectData = [
+        index + 1,
         sub.subject_code,
         sub.subject_name,
+        subjectType,
+        sub.credits,
         sub.internal_marks,
         sub.external_marks,
         sub.total_marks,
         sub.grade,
         getGradePoint(sub.grade),
-        sub.credits,
         sub.result_status
       ]
       tableRows.push(subjectData)
@@ -176,15 +179,15 @@ export function SemesterResults({ student, semesters }: SemesterResultsProps) {
                 <TableHeader className="bg-slate-50">
                   <TableRow>
                     <TableHead className="w-[50px] text-center">S.No</TableHead>
-                    <TableHead className="w-[100px]">Code</TableHead>
+                    <TableHead className="w-[120px]">Subject Code</TableHead>
                     <TableHead>Subject Name</TableHead>
                     <TableHead className="w-[100px]">Type</TableHead>
-                    <TableHead className="text-center w-[80px]">Internal</TableHead>
-                    <TableHead className="text-center w-[80px]">External</TableHead>
-                    <TableHead className="text-center w-[80px]">Total</TableHead>
-                    <TableHead className="text-center w-[80px]">Grade</TableHead>
-                    <TableHead className="text-center w-[80px]">GP</TableHead>
                     <TableHead className="text-center w-[80px]">Credits</TableHead>
+                    <TableHead className="text-center w-[120px]">Internal Marks</TableHead>
+                    <TableHead className="text-center w-[120px]">External Marks</TableHead>
+                    <TableHead className="text-center w-[120px]">Total Marks</TableHead>
+                    <TableHead className="text-center w-[80px]">Grade</TableHead>
+                    <TableHead className="text-center w-[110px]">Grade Point</TableHead>
                     <TableHead className="text-right w-[100px]">Result</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -195,12 +198,12 @@ export function SemesterResults({ student, semesters }: SemesterResultsProps) {
                       <TableCell className="font-medium">{sub.subject_code}</TableCell>
                       <TableCell>{sub.subject_name}</TableCell>
                       <TableCell className="text-muted-foreground text-xs">{sub.subject_type || (sub.subject_name.toLowerCase().includes('lab') ? 'Laboratory' : 'Theory')}</TableCell>
+                      <TableCell className="text-center">{sub.credits}</TableCell>
                       <TableCell className="text-center">{sub.internal_marks}</TableCell>
                       <TableCell className="text-center">{sub.external_marks}</TableCell>
                       <TableCell className="text-center font-semibold">{sub.total_marks}</TableCell>
                       <TableCell className="text-center font-bold">{sub.grade}</TableCell>
                       <TableCell className="text-center">{getGradePoint(sub.grade)}</TableCell>
-                      <TableCell className="text-center">{sub.credits}</TableCell>
                       <TableCell className="text-right">
                         <Badge variant="outline" className={getResultColor(sub.result_status)}>
                           {sub.result_status}
