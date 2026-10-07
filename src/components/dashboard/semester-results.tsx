@@ -13,6 +13,7 @@ interface SemesterResultsProps {
   student: any;
   semesters: any[];
   results?: any[]; // Keep prop signature
+  overallCgpa?: string;
 }
 
 const getGradePoint = (grade: string) => {
@@ -28,7 +29,7 @@ const getGradePoint = (grade: string) => {
   }
 }
 
-export function SemesterResults({ student, semesters }: SemesterResultsProps) {
+export function SemesterResults({ student, semesters, overallCgpa }: SemesterResultsProps) {
   const [activeSem, setActiveSem] = useState<number>(1)
   const [isGenerating, setIsGenerating] = useState<boolean>(false)
   const [downloadSuccess, setDownloadSuccess] = useState<boolean>(false)
@@ -36,9 +37,21 @@ export function SemesterResults({ student, semesters }: SemesterResultsProps) {
   // Find active semester data from the passed in array
   const activeSemesterData = semesters.find(s => s.semester_number === activeSem)
   const currentSubjects = activeSemesterData?.subjects || []
-  const currentSgpa = activeSemesterData?.sgpa || 0
-  const currentCredits = activeSemesterData?.total_credits || 0
-  const currentEarned = activeSemesterData?.credits_earned || 0
+  
+  // Dynamically calculate SGPA and Credits
+  let calcPoints = 0;
+  let calcCredits = 0;
+  
+  currentSubjects.forEach((sub: any) => {
+    const credits = sub.credits || 0;
+    const gradePoint = sub.grade_point || getGradePoint(sub.grade) || 0;
+    calcCredits += credits;
+    calcPoints += (credits * gradePoint);
+  });
+  
+  const currentSgpa = calcCredits > 0 ? (calcPoints / calcCredits) : (activeSemesterData?.sgpa || 0);
+  const currentCredits = calcCredits > 0 ? calcCredits : (activeSemesterData?.total_credits || 0);
+  const currentEarned = activeSemesterData?.credits_earned || currentCredits;
   const currentResultStatus = activeSemesterData?.result_status || 'N/A'
   
   // Calculate failed subjects and backlogs
@@ -172,7 +185,7 @@ export function SemesterResults({ student, semesters }: SemesterResultsProps) {
       doc.setFont("helvetica", "normal")
       doc.text(currentSgpa.toFixed(2), 50, finalY + 18)
       doc.text(currentResultStatus, 50, finalY + 25)
-      doc.text(`Not Available`, 50, finalY + 32) // Add CGPA logic here if available in db
+      doc.text(overallCgpa || `Not Available`, 50, finalY + 32)
       
       doc.setFont("helvetica", "bold")
       doc.text(`Total Credits:`, 110, finalY + 18)
