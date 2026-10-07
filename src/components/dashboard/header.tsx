@@ -74,7 +74,8 @@ export function DashboardHeader({ user, student }: DashboardHeaderProps) {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer">
+              {/* @ts-ignore */}
+              <DropdownMenuItem asChild className="cursor-pointer">
                 <Link href="/dashboard/profile" className="flex items-center w-full">
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
