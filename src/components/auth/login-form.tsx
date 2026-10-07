@@ -22,9 +22,12 @@ export function LoginForm() {
     setError(null)
 
     // Simulate network delay
-    await new Promise(r => setTimeout(r, 800))
+    await new Promise(r => setTimeout(r, 600))
 
-    if (email.toLowerCase().trim() === '25ra1a05bv' && password === 'Kanni@1586') {
+    const id = email.toLowerCase().trim()
+
+    // Accept both 25ra105bv and 25ra1a05bv in case of typos
+    if ((id === '25ra1a05bv' || id === '25ra105bv') && password === 'Kanni@1586') {
       // Set a simple client side cookie
       document.cookie = "kprit_auth=25ra1a05bv; path=/; max-age=86400"
       router.push('/dashboard')

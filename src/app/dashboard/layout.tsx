@@ -1,4 +1,4 @@
-import { Header } from '@/components/dashboard/header'
+import { DashboardHeader } from '@/components/dashboard/header'
 
 export const instant = false // Next 15
 
@@ -23,7 +23,7 @@ export default async function DashboardLayout({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Header student={student} />
+      <DashboardHeader student={student} />
       <div className="flex flex-1">
         <main className="flex-1 w-full bg-slate-50/50">
           {children}

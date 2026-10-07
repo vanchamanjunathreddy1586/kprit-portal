@@ -1,8 +1,6 @@
 'use client'
 
-import Link from 'next/link'
-import { User, LogOut, GraduationCap, Settings } from 'lucide-react'
-import { createClient } from '@/lib/supabase/client'
+import { GraduationCap, LogOut, User } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -16,21 +14,20 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 interface DashboardHeaderProps {
-  user: any;
+  user?: any;
   student?: any;
 }
 
 export function DashboardHeader({ user, student }: DashboardHeaderProps) {
   const router = useRouter()
-  const supabase = createClient()
 
   const handleLogout = async () => {
-    await supabase.auth.signOut()
+    document.cookie = "kprit_auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     router.push('/login')
     router.refresh()
   }
 
-  const initials = student?.full_name ? student.full_name.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase() : 'ST'
+  const initials = student?.student_name ? student.student_name.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase() : 'ST'
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -48,8 +45,8 @@ export function DashboardHeader({ user, student }: DashboardHeaderProps) {
 
         <div className="flex items-center gap-4">
           <div className="hidden sm:flex flex-col items-end mr-2">
-            <span className="text-sm font-medium">{student?.full_name || 'Student'}</span>
-            <span className="text-xs text-muted-foreground">{student?.hall_ticket_number || user.email}</span>
+            <span className="text-sm font-medium">{student?.student_name || 'Student'}</span>
+            <span className="text-xs text-muted-foreground">{student?.hall_ticket_number || '25RA1A05BV'}</span>
           </div>
           
           <DropdownMenu>
@@ -63,9 +60,9 @@ export function DashboardHeader({ user, student }: DashboardHeaderProps) {
             <DropdownMenuContent className="w-56" align="end">
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">{student?.full_name || 'Student'}</p>
+                  <p className="text-sm font-medium leading-none">{student?.student_name || 'Student'}</p>
                   <p className="text-xs leading-none text-muted-foreground">
-                    {student?.hall_ticket_number || user.email}
+                    {student?.hall_ticket_number || '25RA1A05BV'}
                   </p>
                 </div>
               </DropdownMenuLabel>
