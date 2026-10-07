@@ -2,7 +2,6 @@
 
 import { GraduationCap, LogOut, User } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
@@ -56,13 +55,10 @@ export function DashboardHeader({ user, student }: DashboardHeaderProps) {
           </Button>
 
           <DropdownMenu>
-            {/* @ts-ignore - Radix supports asChild but local types are strict */}
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                <Avatar className="h-10 w-10 border border-primary/20">
-                  <AvatarFallback className="bg-primary/10 text-primary">{initials}</AvatarFallback>
-                </Avatar>
-              </Button>
+            <DropdownMenuTrigger className="relative h-10 w-10 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+              <Avatar className="h-10 w-10 border border-primary/20">
+                <AvatarFallback className="bg-primary/10 text-primary">{initials}</AvatarFallback>
+              </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end">
               <DropdownMenuLabel className="font-normal">
@@ -74,12 +70,9 @@ export function DashboardHeader({ user, student }: DashboardHeaderProps) {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {/* @ts-ignore */}
-              <DropdownMenuItem asChild className="cursor-pointer">
-                <Link href="/dashboard/profile" className="flex items-center w-full">
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
-                </Link>
+              <DropdownMenuItem onClick={() => router.push('/dashboard/profile')} className="cursor-pointer">
+                <User className="mr-2 h-4 w-4" />
+                <span>Profile</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout} className="text-destructive cursor-pointer">
